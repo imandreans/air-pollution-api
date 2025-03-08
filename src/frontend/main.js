@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const getMonth = months[unix.getMonth()];
         const getDate = unix.getDate();
         const getHour = unix.getHours();
-        const getMinute = unix.getMinutes();
+        const getMinute = unix.getMinutes().toString().padStart(2, '0');
         const getCalendarDate = getDate + "/" + getMonth + "/" + getYear;
         const getTime = getHour + ":" + getMinute;
         return `
@@ -122,6 +122,50 @@ document.addEventListener("DOMContentLoaded", () => {
       const lastUpdate = document.querySelector(".item:nth-child(5)");
       const aqiScore = document.querySelector(".aqi-score");
       const warning = document.querySelector(".warnings");
+      // const search = document.getElementById("search");
+      const input = document.querySelector('.input');
+      const resultWrapper = document.querySelector(".input-result");
+      const resultList = document.querySelector(".input-list");
+      const cityName = 'Muko'
+
+
+      search.addEventListener("input", (e) => {
+        let value = e.target.value.trim().toLowerCase();
+
+        // when no input, it will delete list
+        if(value === '') {
+          resultList.innerHTML = ''
+          return;
+        }
+
+        // so, if the input starts with anything inside the cityName variable, it will return the renderResult
+        if(cityName.toLowerCase().startsWith(value)){
+          renderResult(cityName)
+        } else {
+          renderNoResult()
+        }
+      });
+
+      function renderResult(input) {
+        resultList.innerHTML = ''
+        const showResult = document.createElement("li");
+        showResult.classList.add('list')
+        showResult.textContent = input;
+        resultList.append(showResult);
+        resultWrapper.appendChild(resultList);
+
+      }
+
+      function renderNoResult() {
+        resultList.innerHTML = ''
+        const showNoResult = document.createElement("li");
+        showNoResult.classList.add('list')
+        showNoResult.textContent = "No city is found";
+        resultList.append(showNoResult);
+        resultWrapper.appendChild(resultList);
+
+      }
+
       item.innerHTML = pollutantCard;
       aqiScore.innerHTML = aqi;
       lastUpdate.innerHTML = timeConverter();
